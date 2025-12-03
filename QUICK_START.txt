@@ -1,0 +1,416 @@
+================================================================================
+QUICK START GUIDE FOR REVIEWERS
+================================================================================
+Paper: Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for 
+       Resource-Efficient Wireless Sensor Network Localization
+
+Code: Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for 
+      Resource-Efficient Wireless Sensor Network Localization.py
+
+================================================================================
+OVERVIEW
+================================================================================
+
+This code implements a Wireless Sensor Network (WSN) localization simulator
+with two main components:
+1. AAMP (Adaptive Age-Aware Matrix Pruning) - reduces memory usage by pruning
+   stale distance measurements based on age and confidence
+2. GDT (Geographic Distance Tracking) - reconstructs full distance matrix
+   from partial measurements using MDS-based optimization
+
+The simulator generates:
+- 4 Figures: 2(a), 2(b), 3, and 4
+- 3 Tables: Pruning Sensitivity, Flood Cycles, and GDT Accuracy
+
+================================================================================
+PREREQUISITES
+================================================================================
+
+Required Python packages:
+- Python 3.6 or higher
+- tkinter (usually included with Python)
+- matplotlib
+- numpy
+- scipy
+
+Installation:
+    pip install matplotlib numpy scipy
+
+================================================================================
+USAGE MODES
+================================================================================
+
+1. GUI MODE (Interactive):
+   Run: python "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py"
+   
+   This opens a graphical interface where you can:
+   - Configure simulation parameters
+   - Run individual operations (Ping Flood, Prune, GDT, etc.)
+   - Generate figures and tables through menu buttons
+   - View real-time visualization
+
+2. AUTOMATED MODE (Script):
+   Run: python generate_all_figures_tables.py
+   
+   This automatically generates all 4 figures and 3 tables without GUI interaction.
+   Output files are saved to the "exports/" directory.
+
+3. HEADLESS MODE (Command Line):
+   For Figure 4 (Mobility Trial) only:
+   python "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py" --mobility-trial --trials 5 --cycles 6
+
+================================================================================
+GENERATING FIGURES AND TABLES
+================================================================================
+
+FIGURE 2(a): Cumulative Bytes Sent by Naive vs Version-Controlled Flooding
+----------------------------------------------------------------------------
+Method 1 (GUI):
+  1. Click "Ping Flood" to populate distance matrix
+  2. Click "Matrix Flood" 10 times (or use "Matrix Flood ×10" button)
+  3. Figure 2(a) is automatically generated and saved to exports/
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/cumulative_bytes_graph_*.eps, *.png, fig2a.txt
+
+FIGURE 2(b): Reduction in Defined Matrix Entries After AAMP Pruning
+--------------------------------------------------------------------
+Method 1 (GUI):
+  1. Click "Ping Flood" to populate distance matrix
+  2. Click "Compare Prune" button
+  3. Figure 2(b) is automatically generated and saved to exports/
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/prune_effect_*.eps, *.png, fig2b.txt
+
+Note: "Compare Prune" performs pruning and generates the before/after comparison
+      chart. "Prune Matrix" only performs pruning without generating the figure.
+
+FIGURE 3: MAE Heatmap Under Varying RF Noise and Pruning Thresholds
+-------------------------------------------------------------------
+Method 1 (GUI):
+  1. Click "MAE Heatmap Sweep" button
+  2. Wait for completion (tests multiple σ and θ combinations)
+  3. Figure 3 is saved to exports/
+  
+  IMPORTANT: After MAE Heatmap Sweep, the configuration parameters (σ, θ, seed)
+  are changed to the last tested values. If you need to generate other figures/tables
+  with default parameters, reset the configuration:
+  - Click "Config" button
+  - Set σ=2.0, θ=0.55, seed=12340 (or desired default values)
+  - Click "Apply"
+  - Or click "Best-Practice Preset" to restore recommended defaults
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/mae_heatmap_*.eps, *.png, fig3.txt, mae_sweep_*.csv
+  
+  Note: The automated script handles configuration changes automatically.
+
+FIGURE 4: Recovery Trajectory Under Node Mobility
+--------------------------------------------------
+Method 1 (GUI):
+  1. Click "Mobility Trial" button
+  2. Wait for completion (runs multiple trials and recovery cycles)
+  3. Figure 4 is saved to exports/
+
+Method 2 (Command Line):
+  python "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py" --mobility-trial --trials 5 --cycles 6
+  Output: exports/mobility_recovery_*.eps, *.png, fig4.txt, fig4.csv
+
+Method 3 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/mobility_recovery_*.eps, *.png, fig4.txt, fig4.csv
+
+HOW TO GET THE SPECIFIC MAE VALUES MENTIONED IN THE PAPER:
+----------------------------------------------------------
+To reproduce the paper's Figure 4 values:
+- Cycle 1: 1.153 ± 0.068 m
+- Cycle 3: 1.084 ± 0.044 m  
+- Cycle 6: 1.042 ± 0.070 m
+
+STEP-BY-STEP INSTRUCTIONS:
+---------------------------
+
+METHOD A: Using GUI (Easiest)
+1. Launch the application:
+   python "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py"
+
+2. Verify/Set Configuration:
+   - Click "Config" button
+   - Set: N=32, L=50.0, σ=2.0, λ=0.0002, θ=0.55, Seed=12340
+   - Click "Apply"
+   - OR click "Best-Practice Preset" to load recommended defaults
+
+3. Run Mobility Trial:
+   - Click "Mobility Trial (5/32 ×6)" button
+   - Wait for completion (takes 2-3 minutes)
+   - The trial automatically runs with:
+     * 5 independent trials (seeds 12340-12344)
+     * 6 recovery cycles per trial
+     * 5 nodes displaced (15.6% of 32 nodes)
+     * Displacement: 10.0-15.0 meters
+
+4. Read the Values:
+   - Open exports/fig4.txt
+   - Look for "Recovery Cycle MAE Data" section
+   - Values are shown as: Cycle | Mean MAE (m) | Std Dev (m)
+   - Example output:
+     Cycle 1: 1.1533 ± 0.0678 m
+     Cycle 3: 1.0844 ± 0.0442 m
+     Cycle 6: 1.0422 ± 0.0705 m
+
+METHOD B: Using Command Line
+1. Run with exact parameters:
+   python "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py" --mobility-trial --trials 5 --cycles 6 --seed 12340
+
+2. Read the output:
+   - Check exports/fig4.txt for formatted results
+   - Check exports/fig4.csv for raw data (Cycle, Mean_MAE_m, Std_MAE_m)
+
+METHOD C: Using Python Script (Programmatic)
+1. Create a script (e.g., get_fig4_values.py):
+   ```python
+   import sys
+   import os
+   import importlib.util
+   
+   # Import the main module
+   code_file = "Adaptive Age-Aware Matrix Pruning and Geographic Distance Tracking for Resource-Efficient Wireless Sensor Network Localization.py"
+   spec = importlib.util.spec_from_file_location("wsn_app", code_file)
+   wsn_module = importlib.util.module_from_spec(spec)
+   spec.loader.exec_module(wsn_module)
+   
+   WSNApp = wsn_module.WSNApp
+   
+   app = WSNApp()
+   app.withdraw()  # Hide GUI
+   
+   # Set configuration
+   app.cfg.N = 32
+   app.cfg.L = 50.0
+   app.cfg.sigma_db = 2.0
+   app.cfg.lam = 0.0002
+   app.cfg.theta = 0.55
+   app.cfg.seed = 12340
+   
+   # Run mobility trial
+   summary = app.run_mobility_trial(
+       num_trials=5,
+       cycles=6,
+       mobile_fraction=5/32,
+       displacement_min=10.0,
+       displacement_max=15.0,
+       export_dir=os.path.join(os.getcwd(), "exports"),
+       include_plot=True,
+       use_aamp=None
+   )
+   
+   # Access values directly from summary dictionary
+   print("Cycle 1:", f"{summary['mean_mae'][0]:.3f} ± {summary['std_mae'][0]:.3f} m")
+   print("Cycle 3:", f"{summary['mean_mae'][2]:.3f} ± {summary['std_mae'][2]:.3f} m")
+   print("Cycle 6:", f"{summary['mean_mae'][5]:.3f} ± {summary['std_mae'][5]:.3f} m")
+   
+   app.destroy()
+   ```
+
+2. Run the script:
+   python get_fig4_values.py
+
+CRITICAL PARAMETERS (must match exactly):
+1. Configuration:
+   - N = 32 nodes
+   - L = 50.0 meters
+   - σ = 2.0 dB (RSSI noise)
+   - λ = 0.0002 (AAMP decay constant)
+   - θ = 0.55 (pruning threshold)
+   - Seed = 12340 (base seed for reproducibility)
+
+2. Mobility Trial Parameters:
+   - num_trials = 5 (runs 5 independent trials with seeds 12340-12344)
+   - cycles = 6 (6 recovery cycles per trial)
+   - mobile_fraction = 5/32 (5 nodes out of 32, i.e., 15.6% of network)
+   - displacement_min = 10.0 meters
+   - displacement_max = 15.0 meters
+
+3. Workflow per cycle (automatically executed):
+   - Ping Flood (RSSI-based distance measurement)
+   - AAMP Pruning (age-aware confidence decay)
+   - Version-Controlled Matrix Flood
+   - Multi-start GDT Reconstruction (10 starts, best by Stress-1)
+   - Validation (computes MAE)
+
+OUTPUT FILES:
+- exports/fig4.txt: Contains formatted mean ± std MAE for each cycle
+- exports/fig4.csv: Raw data with columns: Cycle, Mean_MAE_m, Std_MAE_m
+- exports/mobility_recovery_*.eps, *.png: Visualization with error bars
+
+READING THE VALUES:
+- Open exports/fig4.txt and look for the "Recovery Cycle MAE Data" section
+- Or open exports/fig4.csv in Excel/spreadsheet:
+  * Row 1: Cycle 1, Mean_MAE_m=1.1533, Std_MAE_m=0.0678
+  * Row 3: Cycle 3, Mean_MAE_m=1.0844, Std_MAE_m=0.0442
+  * Row 6: Cycle 6, Mean_MAE_m=1.0422, Std_MAE_m=0.0705
+
+Note: Results are averaged over 5 trials. The exact values depend on:
+   - Random seed (use seed=12340 for reproducibility)
+   - Node deployment (determined by seed)
+   - Which nodes are displaced (randomly selected per trial)
+   - Displacement direction and magnitude (random within 10-15 m range)
+
+If values differ slightly, check:
+   - Configuration parameters match exactly
+   - Seed is set to 12340 (base seed)
+   - Number of trials is 5
+   - Number of cycles is 6
+   - Mobile fraction is 5/32
+   - Displacement range is 10.0-15.0 m
+
+TABLE 1: Communication Overhead Comparison Between Naive and Version-Controlled Flooding Over 10 Flooding Cycles
+------------------------------------------------------------------------------------------------------------------
+Method 1 (GUI):
+  1. Click "Ping Flood" to populate distance matrix
+  2. Click "Reset Flood Log" button (to clear any previous flood history)
+  3. Click "Matrix Flood ×10" button (or set cycles to 10 and click "Flood ×N (Bytes)")
+  4. Click "Export Flood Table" button
+  5. Table is saved to exports/flood_cycles_*.csv
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/flood_cycles_*.csv
+
+TABLE 2: Pruning Parameter Sensitivity Analysis
+------------------------------------------------
+Method 1 (GUI):
+  1. Click "Ping Flood" to populate distance matrix
+  2. Click "Prune Sensitivity" button
+  3. Table is saved to exports/prune_sensitivity_*.csv and prune_sensitivity_table.txt
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/prune_sensitivity_*.csv, prune_sensitivity_table.txt
+
+Note: Table 2 tests θ values: 0.2, 0.3, 0.4, 0.55, 0.6, 0.7, 0.8
+      The default θ=0.55 is chosen as a balanced threshold that provides:
+      - Moderate memory savings (~16% reduction in typical scenarios)
+      - Good balance between data retention and memory efficiency
+      - Avoids overly conservative (θ<0.4) or aggressive (θ>0.6) pruning
+      - Falls in the "moderate" range (0.4-0.6) recommended for balanced operation
+
+TABLE 3: GDT Reconstruction Accuracy
+-------------------------------------
+Method 1 (GUI):
+  1. Click "Ping Flood" to populate distance matrix
+  2. Click "Export GDT Accuracy Table" button
+  3. Table is saved to exports/gdt_accuracy_table_*.csv and table3.txt
+
+Method 2 (Automated):
+  Run: python generate_all_figures_tables.py
+  Output: exports/gdt_accuracy_table_*.csv, table3.txt
+
+================================================================================
+OUTPUT FILES
+================================================================================
+
+All generated files are saved to the "exports/" directory:
+
+FIGURES (EPS and PNG formats):
+- cumulative_bytes_graph_*.eps, *.png (Figure 2a)
+- prune_effect_*.eps, *.png (Figure 2b)
+- mae_heatmap_*.eps, *.png (Figure 3)
+- mobility_recovery_*.eps, *.png (Figure 4)
+
+TABLES (CSV and TXT formats):
+- flood_cycles_*.csv (Table 1: Communication Overhead Comparison)
+- prune_sensitivity_*.csv, prune_sensitivity_table.txt (Table 2: Pruning Sensitivity)
+- gdt_accuracy_table_*.csv, table3.txt (Table 3: GDT Accuracy)
+
+DATA FILES:
+- fig2a.txt, fig2b.txt, fig3.txt, fig4.txt (figure data summaries)
+- mae_sweep_*.csv (raw MAE sweep data)
+- fig4.csv (mobility trial raw data)
+
+================================================================================
+DEFAULT CONFIGURATION
+================================================================================
+
+The simulation uses these default parameters (can be changed via GUI Config):
+- N = 32 nodes
+- L = 50.0 meters (square deployment area)
+- RF Range = 0.48 × diagonal (fraction_diag mode)
+- σ = 2.0 dB (RSSI noise)
+- λ = 0.0002 (AAMP decay constant, 1/second)
+- θ = 0.55 (pruning confidence threshold) - chosen for balanced pruning:
+  * Provides moderate memory savings (~16% reduction) without being too aggressive
+  * Falls in the optimal range (0.4-0.6) for balanced operation
+  * Avoids overly conservative (θ<0.4) or aggressive (θ>0.6) pruning behavior
+- Seed = 12340 (for reproducibility)
+
+Note: Some operations (like MAE Heatmap Sweep) temporarily change configuration
+parameters. After such operations, you may want to restore defaults using the
+"Config" button or "Best-Practice Preset" button.
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+1. "Matplotlib not available" error:
+   Solution: pip install matplotlib numpy scipy
+
+2. GUI doesn't open:
+   Solution: Ensure tkinter is installed (usually included with Python)
+
+3. Files not generated:
+   Solution: Check that "exports/" directory exists and is writable
+
+4. Slow execution:
+   - MAE Heatmap Sweep and Mobility Trial can take several minutes
+   - GDT Accuracy Table runs 10 seeds × 3 strategies = 30 simulations
+   - Be patient, especially for Figure 3 and Table 3
+
+5. Different results than paper:
+   - Results depend on random seed
+   - Ensure you're using the same configuration parameters
+   - Some stochastic variation is expected
+
+================================================================================
+QUICK GENERATION (ALL FIGURES AND TABLES)
+================================================================================
+
+For fastest results, use the automated script:
+
+    python generate_all_figures_tables.py
+
+This will:
+1. Generate all 4 figures (2a, 2b, 3, 4)
+2. Generate all 3 tables (1, 2, 3)
+3. Save all outputs to exports/ directory
+4. Print summary of generated files
+
+Estimated time: 5-10 minutes (depending on system)
+
+Note: The automated script runs the simulation in headless mode. If you encounter
+any issues, you can generate figures and tables individually using the GUI mode
+(see instructions above for each figure/table).
+
+================================================================================
+CONTACT & SUPPORT
+================================================================================
+
+For questions about the code or paper, please refer to the paper authors.
+
+Code structure:
+- Main class: WSNApp (GUI application)
+- Key methods:
+  * on_ping_flood() - populate distance matrix
+  * on_prune_matrix() - apply AAMP pruning
+  * on_matrix_flood() - version-controlled flooding
+  * on_run_gdt_*() - GDT reconstruction strategies
+  * run_mobility_trial() - mobility recovery experiment
+
+================================================================================
+END OF QUICK START GUIDE
+================================================================================
+
